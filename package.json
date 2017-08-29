@@ -1,6 +1,6 @@
 {
   "name": "examplify-log",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Just a very simple logging module for Examplify",
   "main": "index.js",
   "scripts": {
