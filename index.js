@@ -70,18 +70,18 @@ for (var i = 0; i < LEVELS.length; i++) {
  * @param {string} level
  * @param {string} text
  */
-function log(level, text) {
+function log(level, label, data) {
   var args = Array.prototype.slice.call(arguments, 1);
   args = args.map(function formatErrors(arg) {
     return arg instanceof Error ? arg.stack + EOL : arg;
   });
-  text = util.format.apply(util, args);
+  var text = JSON.stringify({
+    label: label,
+    timestamp: new Date(),
+    data: data
+  });
 
-  var msg = {
-    level: level,
-    text: text,
-    date: new Date()
-  };
+  var msg = text;
 
   var transports = module.exports.transports;
   for (var i in transports) {
@@ -296,45 +296,15 @@ function loadAppPackage() {
 
 // region formatter
 function format(msg, formatter) {
-  if (typeof formatter === 'function') {
-    return formatter(msg);
-  }
-
-  var date = msg.date;
-
-  return formatter
-    .replace('{level}', msg.level)
-    .replace('{text}', msg.text)
-    .replace('{y}', date.getFullYear())
-    .replace('{m}', pad(date.getMonth() + 1))
-    .replace('{d}', pad(date.getDate()))
-    .replace('{h}', pad(date.getHours()))
-    .replace('{i}', pad(date.getMinutes()))
-    .replace('{s}', pad(date.getSeconds()))
-    .replace('{ms}', pad(date.getMilliseconds(), 4));
+  return msg;
 }
 
 function formatConsole(msg) {
-  var time =
-    pad(msg.date.getHours()) + ':' +
-    pad(msg.date.getMinutes()) + ':' +
-    pad(msg.date.getSeconds()) + ':' +
-    pad(msg.date.getMilliseconds(), 4);
-
-  return '[' + time + '] [' + msg.level + '] ' + msg.text;
+  return msg;
 }
 
 function formatFile(msg) {
-  var date =
-    msg.date.getFullYear() + '-' +
-    pad(msg.date.getMonth() + 1) + '-' +
-    pad(msg.date.getDate()) + ' ' +
-    pad(msg.date.getHours()) + ':' +
-    pad(msg.date.getMinutes()) + ':' +
-    pad(msg.date.getSeconds()) + ':' +
-    pad(msg.date.getMilliseconds(), 4);
-
-  return '[' + date + '] [' + msg.level + '] ' + msg.text;
+  return msg;
 }
 
 function pad(number, zeros) {
