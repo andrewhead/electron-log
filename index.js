@@ -56,7 +56,7 @@ module.exports.transports.console.level = 'silly';
 
 module.exports.transports.file = transportFile;
 module.exports.transports.file.format = formatFile;
-module.exports.transports.file.level = 'warn';
+module.exports.transports.file.level = 'silly';
 module.exports.transports.file.maxSize = 1024 * 1024;
 module.exports.transports.file.streamConfig = undefined;
 
@@ -76,6 +76,7 @@ function log(level, label, data) {
     return arg instanceof Error ? arg.stack + EOL : arg;
   });
   var text = JSON.stringify({
+    level: level,
     label: label,
     timestamp: new Date(),
     data: data
